@@ -58,8 +58,32 @@ void insertMap(HashMap * map, char * key, void * value) {
 void enlarge(HashMap * map) {
     enlarge_called = 1; //no borrar (testing purposes)
 
+    long oldCapacity = map->capacity;
+    Pair **oldBuckets = map->buckets;
+    
+    // Nueva capacidad (doble)
+    long newCapacity = oldCapacity * 2;
+    
+    // Crear nuevo arreglo de buckets
+    map->buckets = (Pair **)malloc(sizeof(Pair *) * newCapacity);
+    for (long i = 0; i < newCapacity; i++) {
+        map->buckets[i] = NULL;
+    }
+    
+    map->capacity = newCapacity;
+    map->size = 0; // se va a recalcular al reinsertar
+    
+    // Reinserta los elementos antiguos
+    for (long i = 0; i < oldCapacity; i++) {
+        if (oldBuckets[i] != NULL && oldBuckets[i]->key != NULL) {
+            insertMap(map, oldBuckets[i]->key, oldBuckets[i]->value);
+        }
+    }
+    
+    // Libera la memoria del arreglo anterior (no los Pair)
+    free(oldBuckets);
 
-}
+    }
 
 
 HashMap *createMap(long capacity) { 
