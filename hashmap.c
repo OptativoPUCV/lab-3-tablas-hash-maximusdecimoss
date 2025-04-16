@@ -105,9 +105,19 @@ HashMap *createMap(long capacity) {
 }
 
 
-void eraseMap(HashMap * map,  char * key) {    
+void eraseMap(HashMap * map, char * key) {
+    long index = hash(key, map->capacity);
 
+    for (long i = 0; i < map->capacity; i++) {
+        long pos = (index + i) % map->capacity;
+        if (map->buckets[pos] == NULL) return;
 
+        if (map->buckets[pos]->key != NULL && is_equal(map->buckets[pos]->key, key)) {
+            map->buckets[pos]->key = NULL; // marcar como eliminado
+            map->size--;
+            return;
+        }
+    }
 }
 
 Pair * searchMap(HashMap * map,  char * key) {   
