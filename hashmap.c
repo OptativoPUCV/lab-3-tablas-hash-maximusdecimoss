@@ -51,10 +51,27 @@ void enlarge(HashMap * map) {
 }
 
 
-HashMap * createMap(long capacity) {
+HashMap *createMap(long capacity) { 
+    // Reservamos memoria para el mapa
+    HashMap *map = (HashMap *)malloc(sizeof(HashMap));
+    
+    // Reservamos memoria para los buckets (arreglo de punteros a pares)
+    map->buckets = (Pair **)malloc(sizeof(Pair *) * capacity); 
+    
+    // Inicializamos todos los buckets a NULL
+    for (int i = 0; i < capacity; i++) {
+        map->buckets[i] = NULL;
+    }
 
-    return NULL;
+    // Inicializamos los campos del HashMap
+    map->size = 0;
+    map->capacity = capacity;
+    map->current = -1;
+
+    // Devolvemos el mapa inicializado
+    return map;
 }
+
 
 void eraseMap(HashMap * map,  char * key) {    
 
