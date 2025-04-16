@@ -56,40 +56,31 @@ void insertMap(HashMap * map, char * key, void * value) {
 }
 
 void enlarge(HashMap * map) {
-    enlarge_called = 1; //no borrar (testing purposes)
+    enlarge_called = 1;
 
     long oldCapacity = map->capacity;
     Pair **oldBuckets = map->buckets;
+
+    map->capacity *= 2;
+    map->buckets = (Pair **)malloc(sizeof(Pair *) * map->capacity);
     
-    // Nueva capacidad (doble)
-    map-> capacity *= 2;
-    
-    // Crear nuevo arreglo de buckets
-    Pair **newBuckets = (Pair **)malloc(sizeof(Pair *) * map->capacity);
-    if (newBuckets == NULL) {
-        return;
+    if (map->buckets == NULL) return;
+
+    for (long i = 0; i < map->capacity; i++) {
+        map->buckets[i] = NULL;
     }
-    
-    for (long i = 0; i < map -> capacity; i++) {
-        newBuckets[i] = (Pair *)malloc(sizeof(Pair));
-        if (newBuckets[i] == NULL) {
-            return;
-        }
-    }
-    
-    map->buckets = newBuckets;
-    map->size = 0; // Reiniciar el tamaño para volver a insertar los elementos
-    for( long i = 0; i < oldCapacity; i++){
-        if( oldBuckets[i] != NULL && oldBuckets[i]->key != NULL) {
-            // Reinsertar el par en la nueva tabla
+
+    map->size = 0;
+
+    for (long i = 0; i < oldCapacity; i++) {
+        if (oldBuckets[i] != NULL && oldBuckets[i]->key != NULL) {
             insertMap(map, oldBuckets[i]->key, oldBuckets[i]->value);
         }
     }
 
-    // Libera la memoria del arreglo anterior (no los Pair)
     free(oldBuckets);
+}
 
-    }
 
 
 HashMap *createMap(long capacity) { 
