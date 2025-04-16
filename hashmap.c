@@ -137,8 +137,18 @@ Pair * searchMap(HashMap * map, char * key) {
 }
 
 Pair * firstMap(HashMap * map) {
+    if (map == NULL || map->buckets == NULL) return NULL;
+
+    for (long index = 0; index < map->capacity; index++) {
+        Pair *currentPair = map->buckets[index];
+        if (currentPair != NULL && currentPair->key != NULL) {
+            map->current = index;
+            return currentPair;
+        }
+    }
     return NULL;
 }
+
 
 Pair * nextMap(HashMap * map) {
 
